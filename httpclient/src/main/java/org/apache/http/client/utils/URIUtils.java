@@ -210,6 +210,7 @@ public class URIUtils {
         if (uri == null) {
             return null;
         }
+        MyLogFactory.getLog().debug("Rewrite uri for route, may associate with proxy and tunnelled request.");
         if (route.getProxyHost() != null && !route.isTunnelled()) {
             // Make sure the request URI is absolute
             if (!uri.isAbsolute()) {

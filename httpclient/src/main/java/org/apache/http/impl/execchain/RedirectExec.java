@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
+import com.coderli.log.MyLogFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntityEnclosingRequest;
@@ -97,7 +98,7 @@ public class RedirectExec implements ClientExecChain {
         Args.notNull(route, "HTTP route");
         Args.notNull(request, "HTTP request");
         Args.notNull(context, "HTTP context");
-
+        MyLogFactory.getLog().info("Execute request in RedirectExec.");
         final List<URI> redirectLocations = context.getRedirectLocations();
         if (redirectLocations != null) {
             redirectLocations.clear();
@@ -105,6 +106,7 @@ public class RedirectExec implements ClientExecChain {
 
         final RequestConfig config = context.getRequestConfig();
         final int maxRedirects = config.getMaxRedirects() > 0 ? config.getMaxRedirects() : 50;
+        MyLogFactory.getLog().debug("Max redirect count is [" + maxRedirects + "].");
         HttpRoute currentRoute = route;
         HttpRequestWrapper currentRequest = request;
         for (int redirectCount = 0;;) {

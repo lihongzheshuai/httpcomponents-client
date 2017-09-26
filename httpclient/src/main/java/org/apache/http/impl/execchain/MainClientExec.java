@@ -32,6 +32,7 @@ import java.io.InterruptedIOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import com.coderli.log.MyLogFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.ConnectionReuseStrategy;
@@ -155,7 +156,7 @@ public class MainClientExec implements ClientExecChain {
         Args.notNull(route, "HTTP route");
         Args.notNull(request, "HTTP request");
         Args.notNull(context, "HTTP context");
-
+        MyLogFactory.getLog().info("Execute in MainClientExec.");
         AuthState targetAuthState = context.getTargetAuthState();
         if (targetAuthState == null) {
             targetAuthState = new AuthState();

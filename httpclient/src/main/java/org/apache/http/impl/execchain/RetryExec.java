@@ -28,7 +28,9 @@
 package org.apache.http.impl.execchain;
 
 import java.io.IOException;
+import java.util.Arrays;
 
+import com.coderli.log.MyLogFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
@@ -83,7 +85,9 @@ public class RetryExec implements ClientExecChain {
         Args.notNull(route, "HTTP route");
         Args.notNull(request, "HTTP request");
         Args.notNull(context, "HTTP context");
+        MyLogFactory.getLog().info("Execute in RetryExec.java.");
         final Header[] origheaders = request.getAllHeaders();
+        MyLogFactory.getLog().debug("Orig headers: [" + Arrays.asList(origheaders) + "].");
         for (int execCount = 1;; execCount++) {
             try {
                 return this.requestExecutor.execute(route, request, context, execAware);

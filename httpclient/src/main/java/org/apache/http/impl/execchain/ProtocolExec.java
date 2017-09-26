@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import com.coderli.log.MyLogFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpException;
@@ -109,7 +110,7 @@ public class ProtocolExec implements ClientExecChain {
         Args.notNull(route, "HTTP route");
         Args.notNull(request, "HTTP request");
         Args.notNull(context, "HTTP context");
-
+        MyLogFactory.getLog().info("Execute in ProtocolExec.java.");
         final HttpRequest original = request.getOriginal();
         URI uri = null;
         if (original instanceof HttpUriRequest) {
@@ -133,6 +134,7 @@ public class ProtocolExec implements ClientExecChain {
 
         final HttpParams params = request.getParams();
         HttpHost virtualHost = (HttpHost) params.getParameter(ClientPNames.VIRTUAL_HOST);
+        MyLogFactory.getLog().debug("Virtual host: [" + virtualHost + "].");
         // HTTPCLIENT-1092 - add the port if necessary
         if (virtualHost != null && virtualHost.getPort() == -1) {
             final int port = route.getTargetHost().getPort();

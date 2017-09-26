@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.coderli.log.MyLogFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpException;
@@ -121,6 +122,7 @@ class InternalHttpClient extends CloseableHttpClient implements Configurable {
         HttpHost host = target;
         if (host == null) {
             host = (HttpHost) request.getParams().getParameter(ClientPNames.DEFAULT_HOST);
+            MyLogFactory.getLog().debug("If http host is null, refers to DEFAULT_HOST(http.default-host) in request params.");
         }
         return this.routePlanner.determineRoute(host, request, context);
     }
@@ -158,14 +160,18 @@ class InternalHttpClient extends CloseableHttpClient implements Configurable {
         HttpExecutionAware execAware = null;
         if (request instanceof HttpExecutionAware) {
             execAware = (HttpExecutionAware) request;
+            //by li.hzh
+            MyLogFactory.getLog().debug("Cast HttpRequest to HttpExecutionAware.");
         }
         try {
             final HttpRequestWrapper wrapper = HttpRequestWrapper.wrap(request, target);
+            MyLogFactory.getLog().debug("Wrap HttpRequest and HttpHost into HttpRequestWrapper. [" + wrapper + "].");
             final HttpClientContext localcontext = HttpClientContext.adapt(
                     context != null ? context : new BasicHttpContext());
             RequestConfig config = null;
             if (request instanceof Configurable) {
                 config = ((Configurable) request).getConfig();
+                MyLogFactory.getLog().debug("It's a Configurable request.");
             }
             if (config == null) {
                 final HttpParams params = request.getParams();
@@ -177,11 +183,16 @@ class InternalHttpClient extends CloseableHttpClient implements Configurable {
                     config = HttpClientParamConfig.getRequestConfig(params, this.defaultConfig);
                 }
             }
+            MyLogFactory.getLog().debug("Get http config, direct from request if it's Configurable, or assemble config from request.getParams.");
+            MyLogFactory.getLog().debug("Http Config is: [" + config + "].");
             if (config != null) {
                 localcontext.setRequestConfig(config);
             }
             setupContext(localcontext);
             final HttpRoute route = determineRoute(target, wrapper, localcontext);
+            MyLogFactory.getLog().info("Determine route by HttpHost(target), HttpRequestWrapper, " +
+                    "HttpClientContext(config has been set to it, if not null.)");
+            MyLogFactory.getLog().debug("HttpRoute contains httphost, port, proxy, secure info, etc. Here is [" + route + "].");
             return this.execChain.execute(route, wrapper, localcontext, execAware);
         } catch (final HttpException httpException) {
             throw new ClientProtocolException(httpException);
@@ -196,7 +207,7 @@ class InternalHttpClient extends CloseableHttpClient implements Configurable {
     @Override
     public void close() {
         if (this.closeables != null) {
-            for (final Closeable closeable: this.closeables) {
+            for (final Closeable closeable : this.closeables) {
                 try {
                     closeable.close();
                 } catch (final IOException ex) {

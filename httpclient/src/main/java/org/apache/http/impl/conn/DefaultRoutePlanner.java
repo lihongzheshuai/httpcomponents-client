@@ -29,6 +29,7 @@ package org.apache.http.impl.conn;
 
 import java.net.InetAddress;
 
+import com.coderli.log.MyLogFactory;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;

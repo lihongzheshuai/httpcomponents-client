@@ -26,6 +26,7 @@
  */
 package org.apache.http.impl.conn;
 
+import com.coderli.log.MyLogFactory;
 import org.apache.http.HttpHost;
 import org.apache.http.annotation.Contract;
 import org.apache.http.annotation.ThreadingBehavior;
@@ -46,6 +47,7 @@ public class DefaultSchemePortResolver implements SchemePortResolver {
     @Override
     public int resolve(final HttpHost host) throws UnsupportedSchemeException {
         Args.notNull(host, "HTTP host");
+        MyLogFactory.getLog().debug("When no port is given, resolve it. 80 for HTTP and 443 for HTTPs.");
         final int port = host.getPort();
         if (port > 0) {
             return port;

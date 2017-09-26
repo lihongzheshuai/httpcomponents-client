@@ -29,6 +29,7 @@ package org.apache.http.examples.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.coderli.log.MyLogFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -39,7 +40,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-
 public class QuickStart {
 
     public static void main(String[] args) throws Exception {
@@ -55,7 +55,8 @@ public class QuickStart {
             // connection cannot be safely re-used and will be shut down and discarded
             // by the connection manager.
             try {
-                System.out.println(response1.getStatusLine());
+                //by li.hzh
+                MyLogFactory.getLog().debug("Get Response Line: " + response1.getStatusLine());
                 HttpEntity entity1 = response1.getEntity();
                 // do something useful with the response body
                 // and ensure it is fully consumed
@@ -64,22 +65,23 @@ public class QuickStart {
                 response1.close();
             }
 
-            HttpPost httpPost = new HttpPost("http://httpbin.org/post");
-            List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-            nvps.add(new BasicNameValuePair("username", "vip"));
-            nvps.add(new BasicNameValuePair("password", "secret"));
-            httpPost.setEntity(new UrlEncodedFormEntity(nvps));
-            CloseableHttpResponse response2 = httpclient.execute(httpPost);
-
-            try {
-                System.out.println(response2.getStatusLine());
-                HttpEntity entity2 = response2.getEntity();
-                // do something useful with the response body
-                // and ensure it is fully consumed
-                EntityUtils.consume(entity2);
-            } finally {
-                response2.close();
-            }
+//            HttpPost httpPost = new HttpPost("http://httpbin.org/post");
+//            List <NameValuePair> nvps = new ArrayList <NameValuePair>();
+//            nvps.add(new BasicNameValuePair("username", "vip"));
+//            nvps.add(new BasicNameValuePair("password", "secret"));
+//            httpPost.setEntity(new UrlEncodedFormEntity(nvps));
+//            CloseableHttpResponse response2 = httpclient.execute(httpPost);
+//
+//            try {
+//                //by li.hzh
+//                MyLogFactory.getLog().debug("Post Response Line: " + response2.getStatusLine());
+//                HttpEntity entity2 = response2.getEntity();
+//                // do something useful with the response body
+//                // and ensure it is fully consumed
+//                EntityUtils.consume(entity2);
+//            } finally {
+//                response2.close();
+//            }
         } finally {
             httpclient.close();
         }

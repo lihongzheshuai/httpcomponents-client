@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
 
+import com.coderli.log.MyLogFactory;
 import org.apache.http.HttpHost;
 import org.apache.http.conn.routing.RouteInfo;
 import org.apache.http.util.Args;
@@ -331,6 +332,7 @@ public class URIUtils {
      * @since 4.1
      */
     public static HttpHost extractHost(final URI uri) {
+        MyLogFactory.getLog().debug("Convert URI to HttpHost. see [TestURIUtils.java]");
         if (uri == null) {
             return null;
         }

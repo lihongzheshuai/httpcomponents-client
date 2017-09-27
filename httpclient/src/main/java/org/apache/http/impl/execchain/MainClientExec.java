@@ -173,7 +173,7 @@ public class MainClientExec implements ClientExecChain {
         }
 
         Object userToken = context.getUserToken();
-
+        MyLogFactory.getLog().info("Request Connection with route:[" + route + "] and state(usertoken): [" +userToken + "].");
         final ConnectionRequest connRequest = connManager.requestConnection(route, userToken);
         if (execAware != null) {
             if (execAware.isAborted()) {

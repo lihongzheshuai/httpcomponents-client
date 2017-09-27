@@ -38,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.coderli.log.MyLogFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpClientConnection;
@@ -102,7 +103,7 @@ import org.apache.http.util.Asserts;
  */
 @Contract(threading = ThreadingBehavior.SAFE_CONDITIONAL)
 public class PoolingHttpClientConnectionManager
-    implements HttpClientConnectionManager, ConnPoolControl<HttpRoute>, Closeable {
+        implements HttpClientConnectionManager, ConnPoolControl<HttpRoute>, Closeable {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -123,7 +124,7 @@ public class PoolingHttpClientConnectionManager
     }
 
     public PoolingHttpClientConnectionManager(final long timeToLive, final TimeUnit tunit) {
-        this(getDefaultRegistry(), null, null ,null, timeToLive, tunit);
+        this(getDefaultRegistry(), null, null, null, timeToLive, tunit);
     }
 
     public PoolingHttpClientConnectionManager(
@@ -162,9 +163,9 @@ public class PoolingHttpClientConnectionManager
             final DnsResolver dnsResolver,
             final long timeToLive, final TimeUnit tunit) {
         this(
-            new DefaultHttpClientConnectionOperator(socketFactoryRegistry, schemePortResolver, dnsResolver),
-            connFactory,
-            timeToLive, tunit
+                new DefaultHttpClientConnectionOperator(socketFactoryRegistry, schemePortResolver, dnsResolver),
+                connFactory,
+                timeToLive, tunit
         );
     }
 
@@ -172,9 +173,9 @@ public class PoolingHttpClientConnectionManager
      * @since 4.4
      */
     public PoolingHttpClientConnectionManager(
-        final HttpClientConnectionOperator httpClientConnectionOperator,
-        final HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory,
-        final long timeToLive, final TimeUnit tunit) {
+            final HttpClientConnectionOperator httpClientConnectionOperator,
+            final HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory,
+            final long timeToLive, final TimeUnit tunit) {
         super();
         this.configData = new ConfigData();
         this.pool = new CPool(new InternalConnectionFactory(
@@ -337,6 +338,7 @@ public class PoolingHttpClientConnectionManager
             final HttpContext context) throws IOException {
         Args.notNull(managedConn, "Managed Connection");
         Args.notNull(route, "HTTP route");
+        MyLogFactory.getLog().info("HTTP Connection connect. [" + route + "]");
         final ManagedHttpClientConnection conn;
         synchronized (managedConn) {
             final CPoolEntry entry = CPoolProxy.getPoolEntry(managedConn);
@@ -504,7 +506,6 @@ public class PoolingHttpClientConnectionManager
 
     /**
      * @see #setValidateAfterInactivity(int)
-     *
      * @since 4.4
      */
     public int getValidateAfterInactivity() {
@@ -514,12 +515,11 @@ public class PoolingHttpClientConnectionManager
     /**
      * Defines period of inactivity in milliseconds after which persistent connections must
      * be re-validated prior to being {@link #leaseConnection(java.util.concurrent.Future,
-     *   long, java.util.concurrent.TimeUnit) leased} to the consumer. Non-positive value passed
+     * long, java.util.concurrent.TimeUnit) leased} to the consumer. Non-positive value passed
      * to this method disables connection validation. This check helps detect connections
      * that have become stale (half-closed) while kept inactive in the pool.
      *
      * @see #leaseConnection(java.util.concurrent.Future, long, java.util.concurrent.TimeUnit)
-     *
      * @since 4.4
      */
     public void setValidateAfterInactivity(final int ms) {
@@ -584,7 +584,7 @@ public class PoolingHttpClientConnectionManager
             super();
             this.configData = configData != null ? configData : new ConfigData();
             this.connFactory = connFactory != null ? connFactory :
-                ManagedHttpClientConnectionFactory.INSTANCE;
+                    ManagedHttpClientConnectionFactory.INSTANCE;
         }
 
         @Override
